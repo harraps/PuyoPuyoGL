@@ -1,0 +1,2 @@
+# ignore all lua files:
+build/*.lua
