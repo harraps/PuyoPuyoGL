@@ -2,11 +2,11 @@ class Puyo
 
 public
     # we need access to those attributes to display the puyo
-    attr_accessor :type, :x, :y
+    attr_accessor :color, :x, :y
 
     # construct a new puyo to be placed in the board
-    def initialize(board, type, x: nil, y: nil)
-        @board = board ; @type = type
+    def initialize(board, color, x: nil, y: nil)
+        @board = board ; @color = color
         if x.nil? or y.nil?
             @placed = false
         else
@@ -20,8 +20,9 @@ public
         return ((@y & 0xFF) << 8) | (@x & 0xFF)
     end
 
-    # check surrounding puyos for combos
-    def check
-
+    # remove the puyo from the board
+    def destroy
+        @board.puyos[@hash] = nil
+        return @itself
     end
 end

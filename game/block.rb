@@ -33,21 +33,25 @@ public
     # (h and r must be normalized)
     def update(h, d, r)
         # when the block is rotating, we must change the orientation progressively
-        if @rotating != 0
-            @orient += @rotating * @speed / 180
-            # check if we passed by the target
-            if
-                (@rotating < 0 and @orient <= @target) or
-                (@rotating > 0 and @orient >= @target)
-                # once the target reached, stop rotating
-                @rotating = 0
-                @orient = @target
-            end
+        if @rotating != 0 then @updateRotation
         # otherwise we can update the block based on inputs
         else updateInputs h, d, r end
     end
 
 protected
+    # update the block while rotating
+    def updateRotation
+        @orient += @rotating * @speed / 180
+        # check if we passed by the target
+        if
+            (@rotating < 0 and @orient <= @target) or
+            (@rotating > 0 and @orient >= @target)
+            # once the target reached, stop rotating
+            @rotating = 0
+            @orient = @target
+        end
+    end
+
     # update the block based on inputs
     # cannot be used when rotating
     def updateInputs(h, d, r)
@@ -113,9 +117,16 @@ protected
         end
     end
 
-    # destroy the block, place the puyos in the board, set the board to combo mode
+    # place the puyos of the block in the board
     def destroy
-        # TODO
+        # destroy the block
+        @board.block = nil
+
+        # place the puyos of the block in the board
+        x = if @orient == 1 then @x - 1 elsif @orient == 3 then @x + 1 else @x end
+        y = if @orient == 2 then @y - 1 elsif @orient == 0 then @y + 1 else @y end
+        @board.add @puyos[0], @x, @y
+        @board.add @puyos[1],  x,  y # adapt coordinates based on orientation
     end
 
 end
